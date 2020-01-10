@@ -1,6 +1,7 @@
 package sdacademy.demo.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "passenger")
@@ -16,6 +17,15 @@ public class Passenger {
 
     @Column(name = "last_name")
     private String lastName;
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+            })
+    @JoinTable(name = "bus_line_passenger",
+            joinColumns = @JoinColumn(name = "passenger_id"),
+            inverseJoinColumns = @JoinColumn(name = "bus_line_id"))
+    List<BusLine> busLines;
 
     public Passenger() {
     }
@@ -47,6 +57,14 @@ public class Passenger {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public List<BusLine> getBusLines() {
+        return busLines;
+    }
+
+    public void setBusLines(List<BusLine> busLines) {
+        this.busLines = busLines;
     }
 
     @Override
