@@ -26,6 +26,16 @@ public class BusLine {
     @JoinColumn(name = "bus_line_id")
     private List<VehicleOnLine> vehicleOnLineList;
 
+
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+            })
+    @JoinTable(name = "bus_line_passenger",
+            joinColumns = @JoinColumn(name = "bus_line_id"),
+            inverseJoinColumns = @JoinColumn(name = "passenger_id"))
+    private List<Passenger> passengers;
+
     public BusLine() {
     }
 
@@ -65,8 +75,17 @@ public class BusLine {
         this.vehicleOnLineList = vehicleOnLineList;
     }
 
+    public List<Passenger> getPassengers() {
+        return passengers;
+    }
+
+    public void setPassengers(List<Passenger> passengers) {
+        this.passengers = passengers;
+    }
+
     /**
      * Dodaj pojazd jeżdżący po linii
+     *
      * @param vehicleOnLine dodawany pojazd
      */
     public void addVehicle(VehicleOnLine vehicleOnLine) {
@@ -74,6 +93,18 @@ public class BusLine {
             vehicleOnLineList = new ArrayList<>();
         }
         vehicleOnLineList.add(vehicleOnLine);
+    }
+
+    /**
+     * Dodaj pasażera jeżdżącego po linii
+     *
+     * @param passenger dodawany pasażer
+     */
+    public void addPassenger(Passenger passenger) {
+        if (passengers == null) {
+            passengers = new ArrayList<>();
+        }
+        passengers.add(passenger);
     }
 
     @Override
