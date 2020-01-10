@@ -3,12 +3,9 @@ package sdacademy;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import sdacademy.demo.entity.BusLine;
-import sdacademy.demo.entity.Driver;
-import sdacademy.demo.entity.DriverDetail;
-import sdacademy.demo.entity.VehicleOnLine;
+import sdacademy.demo.entity.*;
 
-public class CreateBusLineAndVehicleOnLineDemo {
+public class AddBusLineForPassengerDemo {
 
     public static void main(String[] args) {
         //tworzenie fabryki
@@ -18,6 +15,7 @@ public class CreateBusLineAndVehicleOnLineDemo {
                 .addAnnotatedClass(Driver.class)
                 .addAnnotatedClass(BusLine.class)
                 .addAnnotatedClass(VehicleOnLine.class)
+                .addAnnotatedClass(Passenger.class)
                 .buildSessionFactory();
         //tworzenie sesji na potrzeby naszej pracy
         Session session = factory.getCurrentSession();
@@ -26,18 +24,23 @@ public class CreateBusLineAndVehicleOnLineDemo {
             //rozpocznij transakcję żeby zapisać
             session.beginTransaction();
 
-            //stwórz BusLine
-            BusLine busLine = new BusLine("Linia nr 1");
+            //pobierz pasażera id = 1
+            Long id = 1L;
+            Passenger passenger = session.get(Passenger.class, id);
+            System.out.println("Pobrany pasażer: " + passenger);
+            System.out.println("Pobrane linie dla pasażera: " + passenger.getBusLines());
 
-            //dodaj pojazdy na trasie
-            VehicleOnLine volvo = new VehicleOnLine("Volvo");
-            VehicleOnLine mercedes = new VehicleOnLine("Mercedes");
+            //stwórz nową linię
+            BusLine busLine1 = new BusLine("Linia 33");
+            BusLine busLine2 = new BusLine("Linia 15");
 
-            busLine.addVehicle(volvo);
-            busLine.addVehicle(mercedes);
+            //dodaj pasażera do nowej linii
+            busLine1.addPassenger(passenger);
+            busLine2.addPassenger(passenger);
 
-            //zapisz BusLine, zapiszą się również pojazdy
-            session.save(busLine);
+            //zapisz linię
+            session.save(busLine1);
+            session.save(busLine2);
 
             //zakomituj transakcję
             session.getTransaction().commit();
