@@ -11,16 +11,8 @@ import sdacademy.demo.entity.VehicleOnLine;
 public class CreateBusLineAndVehicleOnLineDemo {
 
     public static void main(String[] args) {
-        //tworzenie fabryki
-        // dodanie konfiguracji, dodanie klas
-        SessionFactory factory = new Configuration().configure("hibernate.cfg.xml")
-                .addAnnotatedClass(DriverDetail.class)
-                .addAnnotatedClass(Driver.class)
-                .addAnnotatedClass(BusLine.class)
-                .addAnnotatedClass(VehicleOnLine.class)
-                .buildSessionFactory();
-        //tworzenie sesji na potrzeby naszej pracy
-        Session session = factory.getCurrentSession();
+
+        Session session = SessionFactoryUtils.getSessionFactory().getCurrentSession();
 
         try {
             //rozpocznij transakcję żeby zapisać
@@ -45,7 +37,7 @@ public class CreateBusLineAndVehicleOnLineDemo {
         } finally {
             //posprzątaj po otwartej sesji
             session.close();
-            factory.close();
+            SessionFactoryUtils.close();
         }
     }
 

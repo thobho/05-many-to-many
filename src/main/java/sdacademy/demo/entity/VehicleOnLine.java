@@ -1,9 +1,13 @@
 package sdacademy.demo.entity;
 
 import javax.persistence.*;
-
+import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "vehicle_on_line")
+@NamedQuery(
+        name = "getModelsStartedWithA",
+        query = "from VehicleOnLine vol where vol.model like ':param%'"
+)
 public class VehicleOnLine {
 
     @Id
